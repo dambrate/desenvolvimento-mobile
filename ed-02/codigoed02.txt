@@ -1,0 +1,78 @@
+
+interface Extrato {
+    fun imprimirExtrato()
+}
+
+
+abstract class Conta(
+    val cliente: String,
+    var saldo: Double,
+    val numero: String,
+    val agencia: String
+) : Extrato {
+
+    abstract fun retirar(valor: Double)
+
+    fun depositar(valor: Double) {
+        saldo += valor
+    }
+}
+ 
+class ContaPoupanca(
+    cliente: String,
+    saldo: Double,
+    numero: String,
+    agencia: String
+) : Conta(cliente, saldo, numero, agencia) {
+
+    fun aplicarJuros(dias: Int) {
+        val taxaJuros = 0.003 // 0.3% de juros ao dia
+        saldo *= Math.pow(1.0 + taxaJuros, dias.toDouble())
+    }
+ 
+    override fun imprimirExtrato() {
+        println("Tipo de Conta: Conta Poupança")
+        println("Cliente: $cliente")
+        println("Saldo: R$%.2f".format(saldo))
+        println("Número da Conta: $numero")
+        println("Agência: $agencia")
+    }
+}
+
+
+class ContaCorrente(
+    cliente: String,
+    saldo: Double,
+    numero: String,
+    agencia: String
+) : Conta(cliente, saldo, numero, agencia) {
+
+    fun aplicarJuros(dias: Int) {
+        val taxaJuros = 0.008 // Juros diario
+        saldo *= Math.pow(1.0 + taxaJuros, dias.toDouble())
+    }
+
+    override fun imprimirExtrato() {
+        println("Tipo de Conta: Conta Corrente")
+        println("Cliente: $cliente")
+        println("Saldo: R$%.2f".format(saldo))
+        println("Número da Conta: $numero")
+        println("Agência: $agencia")
+    }
+}
+
+fun main() {
+    val contaPoupanca = ContaPoupanca("João", 1000.0, "12345", "001")
+    val contaCorrente = ContaCorrente("Maria", 2000.0, "67890", "002")
+
+    println("Antes de aplicar juros:")
+    contaPoupanca.imprimirExtrato()
+    contaCorrente.imprimirExtrato()
+
+    contaPoupanca.aplicarJuros(10)
+    contaCorrente.aplicarJuros(10)
+
+    println("\nDepois de aplicar juros:")
+    contaPoupanca.imprimirExtrato()
+    contaCorrente.imprimirExtrato()
+}
